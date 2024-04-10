@@ -29,6 +29,8 @@ public:
     using value_type = T;
 
     LinkedList();
+    LinkedList(std::initializer_list<T> init);
+
     LinkedList(const LinkedList& src);
     LinkedList(LinkedList&& src) noexcept;
 
@@ -164,11 +166,35 @@ LinkedList<T>::LinkedList()
 {}
 
 template<typename T>
+LinkedList<T>::LinkedList(std::initializer_list<T> init)
+        : length(init.size())
+        , first(nullptr)
+        , last(nullptr)
+        , cache({ 0, nullptr })
+{
+    if (init.size() == 0)
+        return;
+
+    auto it = init.begin();
+
+    Node *cur = first = new Node{ *it++, nullptr };
+    for (; it != init.end(); ++it) {
+        cur->next = new Node { *it, nullptr };
+        cur = cur->next;
+    }
+    last = cur;
+
+    cache.node = first;
+}
+
+template<typename T>
 LinkedList<T>::LinkedList(const LinkedList<T>& src)
         : length(src.length)
+        , first(nullptr)
+        , last(nullptr)
+        , cache({ 0, nullptr })
 {
     if (!src.first) {
-        first = last = nullptr;
         return;
     }
 
@@ -178,7 +204,7 @@ LinkedList<T>::LinkedList(const LinkedList<T>& src)
     }
     last = cur;
 
-    cache = { 0, first };
+    cache.node = first;
 }
 
 template<typename T>
@@ -433,7 +459,7 @@ typename LinkedList<T>::const_iterator LinkedList<T>::cend() const
 template<typename T>
 template<typename U>
 LinkedList<T>::Iterator<U>::Iterator(LinkedList::Node *node)
-    : cur(node)
+        : cur(node)
 {}
 
 template<typename T>

@@ -240,3 +240,14 @@ TEST(LinkedList, iterator)
 
     EXPECT_EQ(length, idx);
 }
+
+TEST(LinkedList, initializer_list_ctor)
+{
+    LinkedList<int> list = { 1, 2, 3 };
+
+    ASSERT_EQ(3, list.size());
+    //
+    EXPECT_EQ(1, list[0]);
+    EXPECT_EQ(2, list[1]);
+    EXPECT_EQ(3, list[2]);
+}
