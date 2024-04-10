@@ -6,7 +6,7 @@
 class MonomialReader
 {
 protected:
-    MonomialReader() {};
+    MonomialReader() = default;
 public:
     char peek();
     void skip();
