@@ -50,6 +50,20 @@ TEST(Monomial, can_parse_partial_monomials)
     EXPECT_EQ(50, monomial['z']);
 }
 
+TEST(Monomial, can_parse_fractional_coefficients)
+{
+    Monomial monomial("0.1xyz");
+
+    EXPECT_EQ(0.1, monomial.coefficient());
+}
+
+TEST(Monomial, can_parse_zero_coefficient)
+{
+    Monomial monomial("0xyz");
+
+    EXPECT_EQ(0, monomial.coefficient());
+}
+
 TEST(Monomial, defaults_to_coefficient_if_not_supplied)
 {
     std::optional<Monomial> m;

@@ -84,7 +84,7 @@ bool PStrMonomialReader::read_uint(unsigned int& u)
 }
 bool PStrMonomialReader::read_double(double& d)
 {
-    if (peek() == '0') {
+    if (*p == '0' && *(p + 1) != '.') {
         skip();
         d = 0;
         return true;
