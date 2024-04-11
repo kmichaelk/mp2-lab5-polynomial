@@ -13,13 +13,12 @@ protected:
         Node *next = nullptr;
     } *first, *last;
 
-    struct {
+    mutable struct {
         size_t idx;
         Node *node;
     } cache;
 
     Node* get_node_unamortized(size_t idx) const;
-    Node* _get_node(size_t idx);
     Node* get_node(size_t idx) const;
 
 private:
@@ -115,7 +114,7 @@ typename LinkedList<T>::Node* LinkedList<T>::get_node_unamortized(size_t idx) co
 }
 
 template<typename T>
-typename LinkedList<T>::Node* LinkedList<T>::_get_node(size_t idx)
+typename LinkedList<T>::Node* LinkedList<T>::get_node(size_t idx) const
 {
     size_t i;
     Node *node;
@@ -137,12 +136,6 @@ typename LinkedList<T>::Node* LinkedList<T>::_get_node(size_t idx)
     cache.node = node;
 
     return node;
-}
-
-template<typename T>
-typename LinkedList<T>::Node* LinkedList<T>::get_node(size_t idx) const
-{
-    return const_cast<LinkedList*>(this)->_get_node(idx);
 }
 
 template<typename T>
