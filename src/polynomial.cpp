@@ -145,7 +145,7 @@ Polynomial Polynomial::operator-() const
 
 Polynomial Polynomial::operator+(const Polynomial& other) const
 {
-    return apply_sum(*this, other, std::plus{});
+    return apply_sum(*this, other, 1);
 }
 Polynomial& Polynomial::operator+=(const Polynomial& other)
 {
@@ -157,7 +157,7 @@ Polynomial& Polynomial::operator+=(const Polynomial& other)
 
 Polynomial Polynomial::operator-(const Polynomial& other) const
 {
-    return apply_sum(*this, other, std::minus{});
+    return apply_sum(*this, other, -1);
 }
 Polynomial& Polynomial::operator-=(const Polynomial& other)
 {
@@ -204,23 +204,25 @@ Polynomial& Polynomial::operator/=(const Polynomial& other)
 // so it's faster to create new objects
 //
 
-template<typename Operation>
-Polynomial Polynomial::apply_sum(const Polynomial& p1, const Polynomial& p2, Operation op)
+Polynomial Polynomial::apply_sum(const Polynomial& p1, const Polynomial& p2, int sign)
 {
     Polynomial dst;
 
     const Polynomial* pMin = (p1.size() < p2.size()) ? &p1 : &p2;
     const Polynomial* pMax = (p1.size() < p2.size()) ? &p2 : &p1;
 
+    const bool iterating_rhs = pMax == &p2;
+    const Monomial mult(sign);
+
     auto itMin = pMin->monomials.cbegin();
     for (const auto& m : pMax->monomials) {
         if (itMin == pMin->monomials.cend() || m < *itMin) {
-            dst.insert(m);
+            dst.insert(iterating_rhs ? mult * m : m);
             continue;
         } else if (m.cmp_degs(*itMin)) {
-            dst.insert(op(m, *itMin));
+            dst.insert(iterating_rhs ? (*itMin + mult * m) : (mult * *itMin + m));
         } else {
-            dst.insert(m);
+            dst.insert(iterating_rhs ? mult * m : m);
             continue;
         }
 
@@ -228,7 +230,7 @@ Polynomial Polynomial::apply_sum(const Polynomial& p1, const Polynomial& p2, Ope
     }
 
     for (; itMin != pMin->monomials.cend(); ++itMin) {
-        dst.insert(*itMin);
+        dst.insert(iterating_rhs ? *itMin : mult * *itMin);
     }
 
     return dst;

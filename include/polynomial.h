@@ -130,8 +130,7 @@ private:
 
     OrderedLinkedList<Monomial> monomials = OrderedLinkedList<Monomial>(OrderFunction);
 
-    template<typename Operation>
-    static Polynomial apply_sum(const Polynomial& p1, const Polynomial& p2, Operation op);
+    static Polynomial apply_sum(const Polynomial& p1, const Polynomial& p2, int sign);
     template<typename Operation>
     static Polynomial apply_mult(const Polynomial& p1, const Polynomial& p2, Operation op);
 

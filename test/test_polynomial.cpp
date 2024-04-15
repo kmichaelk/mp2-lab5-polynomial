@@ -46,6 +46,15 @@ TEST(Polynomial, monomials_are_sorted_by_descending_degrees)
     EXPECT_EQ(Monomial("xyz"), p[3]);
 }
 
+TEST(Polynomial, subtracts_in_order)
+{
+    const Polynomial p1(Monomial("2xyz"));
+    const Polynomial p2(Monomial("3x^2yz"));
+    const Polynomial result = p1 - p2;
+
+    ASSERT_EQ(Polynomial("2xyz - 3x^2yz"), result);
+}
+
 TEST(Polynomial, zero_is_not_being_added)
 {
     Polynomial p("0xyz");
